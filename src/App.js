@@ -1,8 +1,7 @@
 import "./App.css";
 import React, { Component } from "react";
 import { DateTime } from "luxon";
-
-const API_KEY = "33178d46dea4c98a92d98aa6ea4ebc24";
+const API_KEY = process.env.REACT_APP_API_KEY;
 const API_URL = "https://api.openweathermap.org/data/2.5/";
 
 export default class App extends Component {
@@ -27,8 +26,7 @@ export default class App extends Component {
       .then((response) => response.json())
       .then((response) =>
         this.setState({ weather: response, isLoading: false })
-      )
-      .catch(() => alert("Enter correct city name and reload app"));
+      );
   };
 
   handleSearchSubmit = (e) => {
@@ -50,7 +48,9 @@ export default class App extends Component {
     return (
       <div
         className={
-          weather && weather.main.temp < 0 ? "container cold" : "container"
+          weather && weather.main && weather.main.temp < 0
+            ? "container cold"
+            : "container"
         }
       >
         <input
@@ -67,7 +67,8 @@ export default class App extends Component {
             <div className="loader"></div>
           </div>
         ) : null}
-        {weather ? (
+
+        {weather && weather.cod === 200 ? (
           <div className="location-wrapper">
             <div className="location">
               {weather.name}, {weather.sys.country}
@@ -82,6 +83,10 @@ export default class App extends Component {
               <div className="weather">{weather.weather[0].main}</div>
             </div>
           </div>
+        ) : null}
+
+        {weather && weather.cod === "404" ? (
+          <div> Enter other city name</div>
         ) : null}
       </div>
     );
