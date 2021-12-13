@@ -27,7 +27,8 @@ export default class App extends Component {
       .then((response) => response.json())
       .then((response) =>
         this.setState({ weather: response, isLoading: false })
-      );
+      )
+      .catch(() => alert("Enter correct city name and reload app"));
   };
 
   handleSearchSubmit = (e) => {
